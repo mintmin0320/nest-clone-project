@@ -1,4 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { ApiProperty } from '@nestjs/swagger';
 import { IsEmail, IsNotEmpty, IsString } from 'class-validator';
 import { Document, SchemaOptions } from 'mongoose';
 
@@ -8,6 +9,11 @@ const options: SchemaOptions = { // DB에서 하나가 만들어지면 타임스
 
 @Schema(options) //스키마 정의
 export class Cat extends Document {  // 몽구스 도큐먼트를 상속받고
+  @ApiProperty({  //swagger에서 데이터 입력 예시 형태를 제공
+    example: 'mintmin0320@gmail.com',
+    description: 'email',
+    required: true,
+  })
   @Prop({
     required: true,
     unique: true,
