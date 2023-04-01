@@ -36,11 +36,19 @@ export class Cat extends Document {  // 몽구스 도큐먼트를 상속받고
   @IsNotEmpty()
   password: string;
 
-  @Prop()
+  @Prop({//디폴트 이미지 설정하기 회원가입 시 이미지를 업로드 안 하니까
+    default:
+      'https://raw.githubusercontent.com/amamov/teaching-nestjs-a-to-z/main/images/1.jpeg'
+  })
   @IsString()
   imgUrl: string;
 
-  readonly readOnlyData: { id: string, email: string, name: string };
+  readonly readOnlyData: {
+    id: string,
+    email: string,
+    name: string,
+    imgUrl: string,
+  };
 }
 
 export const CatSchema = SchemaFactory.createForClass(Cat) // Cat 클래스를 스키마로 만들어준다
@@ -50,5 +58,6 @@ CatSchema.virtual('readOnlyData').get(function (this: Cat) { // 비밀번호는 
     id: this.id,
     email: this.email,
     name: this.name,
+    imgUrl: this.imgUrl,
   }
 }) 

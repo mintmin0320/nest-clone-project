@@ -7,11 +7,36 @@ import { Cat } from './cats.schema';
 export class CatsRepository {
   constructor(@InjectModel(Cat.name) private readonly catModel: Model<Cat>) { }
 
+  async findAll() {
+    return await this.catModel.find();
+  }
+
+  async findByIdAndUploadImg(id: any, fileName: string) {
+    const cat = await this.catModel.findById(id);
+
+    cat.imgUrl = `http://localhost:8000/media/${fileName}`;
+
+    const newCat = await cat.save(); //업데이트된것을 저장
+    console.log(newCat);
+    return newCat.readOnlyData; //필요한 필드만 리턴
+  }
+
+  async findCatByIdWithoutPassword(catId: string): Promise<Cat | null> {
+    const cat = await this.catModel.findById(catId).select('-password') //select는 원하는 필드를 고를 수 있다 마이너스 하면 그것을 제외하고 email name 이런식으로 공백으로 구분
+    return cat;
+  }
+
+  async findCatByEmail(email: string): Promise<Cat | null> {
+    const cat = await this.catModel.findOne({ email });
+    return cat;
+  }
+
   async existByEmail(email: string): Promise<boolean> {
     const result = await this.catModel.exists({ email });
     if (result) return true;
     else return false;
   }
+
 
   async create(cat: CatRequestDto): Promise<Cat> {
     return await this.catModel.create(cat);
