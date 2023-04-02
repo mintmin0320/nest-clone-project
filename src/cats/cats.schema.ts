@@ -2,6 +2,7 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { ApiProperty } from '@nestjs/swagger';
 import { IsEmail, IsNotEmpty, IsString } from 'class-validator';
 import { Document, SchemaOptions } from 'mongoose';
+import { Comments } from 'src/comments/comments.schema';
 
 const options: SchemaOptions = { // DB에서 하나가 만들어지면 타임스탬프가 찍힌다.
   timestamps: true,
@@ -48,16 +49,29 @@ export class Cat extends Document {  // 몽구스 도큐먼트를 상속받고
     email: string,
     name: string,
     imgUrl: string,
+    comments: Comments[];
   };
+  readonly comments: Comments[];
 }
 
-export const CatSchema = SchemaFactory.createForClass(Cat) // Cat 클래스를 스키마로 만들어준다
+const _CatSchema = SchemaFactory.createForClass(Cat);
 
-CatSchema.virtual('readOnlyData').get(function (this: Cat) { // 비밀번호는 노출되면 안됨.. 필요한 것만 리턴하자
+_CatSchema.virtual('readOnlyData').get(function (this: Cat) {
   return {
     id: this.id,
     email: this.email,
     name: this.name,
     imgUrl: this.imgUrl,
-  }
-}) 
+    comments: this.comments,
+  };
+});
+
+_CatSchema.virtual('comments', {
+  ref: 'comments', //comments 스키마와 연결
+  localField: '_id',
+  foreignField: 'info', //외레필드
+});
+_CatSchema.set('toObject', { virtuals: true }); //populate 옵션을 사용하기 위한 두 가지 옵션
+_CatSchema.set('toJSON', { virtuals: true });
+
+export const CatSchema = _CatSchema;

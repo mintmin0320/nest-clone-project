@@ -1,14 +1,25 @@
-import { CatRequestDto } from './dto/cats.request.dto';
-import { HttpException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import { Cat } from './cats.schema';
+import { CatRequestDto } from './dto/cats.request.dto';
+import { Comments } from 'src/comments/comments.schema';
 
+@Injectable()
 export class CatsRepository {
-  constructor(@InjectModel(Cat.name) private readonly catModel: Model<Cat>) { }
+  constructor(
+    @InjectModel(Cat.name) private readonly catModel: Model<Cat>,
+    // 해당 라인 추가, 참고로 강의에선 Comments 인데 저는 Cat과 같이 단수형으로 만들어서 Comment 입니다.
+    @InjectModel(Comments.name) private readonly commentModel: Model<Comments>,
+  ) { }
 
   async findAll() {
-    return await this.catModel.find();
+    const result = await this.catModel
+      .find()
+      // populate 파라미터 변경
+      .populate({ path: 'comments', model: this.commentModel });
+
+    return result;
   }
 
   async findByIdAndUploadImg(id: any, fileName: string) {
@@ -21,7 +32,7 @@ export class CatsRepository {
     return newCat.readOnlyData; //필요한 필드만 리턴
   }
 
-  async findCatByIdWithoutPassword(catId: string): Promise<Cat | null> {
+  async findCatByIdWithoutPassword(catId: string | Types.ObjectId): Promise<Cat | null> {
     const cat = await this.catModel.findById(catId).select('-password') //select는 원하는 필드를 고를 수 있다 마이너스 하면 그것을 제외하고 email name 이런식으로 공백으로 구분
     return cat;
   }

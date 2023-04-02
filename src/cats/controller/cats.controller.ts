@@ -24,7 +24,7 @@ export class CatsController {
   @UseGuards(JwtAuthGuard) //여기서 인증처리
   @Get()
   getCurrentCat(@CurrentUser() cat) {
-    return cat;
+    return cat.readOnlyData;
   }
 
   @ApiResponse({

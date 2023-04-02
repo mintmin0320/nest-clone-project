@@ -33,7 +33,7 @@ async function bootstrap() {
   const document: OpenAPIObject = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('docs', app, document);
   app.enableCors({
-    origin: true, // 나중에 배포 단계에서 바꾸자 특정 아이피로
+    origin: process.env.MODE, // 나중에 배포 단계에서 바꾸자 특정 아이피로
     credentials: true,
   })
   const PORT = process.env.PORT;
