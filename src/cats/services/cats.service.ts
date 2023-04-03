@@ -29,7 +29,7 @@ export class CatsService {
       password: hashedPassword
     });
 
-    return cat.readOnlyData;
+    return { data: cat.readOnlyData, result: true };
   }
 
   async uploadImg(cat: Cat, files: Express.Multer.File[]) {

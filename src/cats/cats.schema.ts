@@ -23,6 +23,11 @@ export class Cat extends Document {  // 몽구스 도큐먼트를 상속받고
   @IsNotEmpty()
   email: string;
 
+  @ApiProperty({  //swagger에서 데이터 입력 예시 형태를 제공
+    example: 'mintmin',
+    description: 'name',
+    required: true,
+  })
   @Prop({
     required: true,
   })
@@ -30,6 +35,11 @@ export class Cat extends Document {  // 몽구스 도큐먼트를 상속받고
   @IsNotEmpty()
   name: string;
 
+  @ApiProperty({  //swagger에서 데이터 입력 예시 형태를 제공
+    example: '1234',
+    description: 'password(string)',
+    required: true,
+  })
   @Prop({
     required: true,
   })

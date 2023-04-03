@@ -34,7 +34,7 @@ export class AuthService {
     const payload = { email: email, sub: cat.id } //sub는 토근 제목
 
     return {
-      token: this.jwtService.sign(payload) //sign 함수로 토큰에 넣는다
+      token: this.jwtService.sign(payload), result: true //sign 함수로 토큰에 넣는다
     }
 
   }
