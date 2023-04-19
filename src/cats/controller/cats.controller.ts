@@ -4,7 +4,7 @@ import { LoginRequestDto } from '../../auth/dto/login.request.dto';
 import { AuthService } from '../../auth/auth.service';
 import { HttpExceptionFilter } from '../../common/execptions/http-exception.filter';
 import { CatsService } from '../services/cats.service';
-import { Body, Controller, Get, Post, UploadedFiles, UseFilters, UseGuards, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, UploadedFiles, UseFilters, UseGuards, UseInterceptors } from '@nestjs/common';
 import { CatRequestDto } from '../dto/cats.request.dto';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { ReadOnlyCatDto } from '../dto/cat.dto';
@@ -12,7 +12,7 @@ import { CurrentUser } from 'src/common/decorators/user.decorator';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { multerOptions } from 'src/common/utils/multer.options';
 
-@Controller('cats')
+@Controller('auth')
 @UseFilters(HttpExceptionFilter)
 export class CatsController {
   constructor(
@@ -59,6 +59,14 @@ export class CatsController {
     console.log(files)
     //return { imagae: `http://localhost:8000/media/cats/${files[0].filename}` };
     return this.catsService.uploadImg(cat, files); //첫번째인자는 현재로그인된정보->jwt토큰 디코딩
+  }
+
+  @ApiOperation({
+    summary: '아이디 조회하기',
+  })
+  @Get(':id')
+  async searchInfo(@Param('id') id: string) {
+    return this.catsService.searchInfo(id);
   }
 
   @ApiOperation({ summary: '모든 고양이 가져오기' })

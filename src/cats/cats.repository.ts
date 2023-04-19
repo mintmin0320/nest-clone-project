@@ -22,14 +22,17 @@ export class CatsRepository {
     return result;
   }
 
+  async findMember(catId: string) {
+    const cat = await this.catModel.findById(catId).select('-password') //select는 원하는 필드를 고를 수 있다 마이너스 하면 그것을 제외하고 email name 이런식으로 공백으로 구분
+    return cat;
+  }
+
   async findByIdAndUploadImg(id: any, fileName: string) {
     const cat = await this.catModel.findById(id);
 
     cat.imgUrl = `http://localhost:8000/media/${fileName}`;
-
-    const newCat = await cat.save(); //업데이트된것을 저장
-    console.log(newCat);
-    return newCat.readOnlyData; //필요한 필드만 리턴
+    console.log(cat);
+    return cat; //필요한 필드만 리턴
   }
 
   async findCatByIdWithoutPassword(catId: string | Types.ObjectId): Promise<Cat | null> {
