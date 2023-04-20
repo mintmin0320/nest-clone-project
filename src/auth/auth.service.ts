@@ -24,7 +24,7 @@ export class AuthService {
     // 패스워드 검사
     const isPasswordValidated: boolean = await bcrypt.compare(  //받아온 패스워드와 모델 안 패스워드와 비교
       password, // 받아온 비번
-      cat.password, // 모델 안 비번
+      cat.password, // 모델 안 비밀번호와 비교
     );
 
     if (!isPasswordValidated) {
@@ -36,7 +36,5 @@ export class AuthService {
     return {
       token: this.jwtService.sign(payload), result: true //sign 함수로 토큰에 넣는다
     }
-
   }
-
 }

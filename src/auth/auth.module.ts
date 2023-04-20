@@ -5,6 +5,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { AuthService } from './auth.service';
 import { ConfigModule } from '@nestjs/config';
+import { AuthController } from './auth.controller';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { ConfigModule } from '@nestjs/config';
     forwardRef(() => CatsModule), // cats 모듈의 exports 된 부분을 사용가능, 서로 참조해서 순환 참조 발생.. forwardRef사용하면 됨
   ],
   providers: [AuthService, JwtStrategy],
-  exports: [AuthService], // 프로바이더 사용을 위해.. 
+  exports: [AuthService],// 프로바이더 사용을 위해.. 
+  controllers: [AuthController],
 })
 export class AuthModule { }
